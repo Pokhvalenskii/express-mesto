@@ -108,6 +108,29 @@ app.delete('/cards/:cardId', (req, res) => {
 });
 
 ////////////////// CARDS ////////////////////
+////////////////// PATCH ////////////////////
+app.patch('/users/me', (req, res) => {
+  const{name, about} = req.body;
+  User.findOneAndUpdate(req.user._id, {name: name, about:about}).then(user => res.send(user));
+});
+
+app.patch('/users/me/avatar', (req, res) => {
+  const{avatar} = req.body;
+  User.findOneAndUpdate(req.user._id, {avatar: avatar}).then(user => res.send(user));
+});
+
+app.put('/cards/:cardId/likes', (req, res) => {
+  console.log('LIKE')
+  Card.findOneAndUpdate(req.params.cardId,{$addToSet:{likes:req.user._id}},{ new: true }).then(card => res.send(card));
+});
+app.delete('/cards/:cardId/likes', (req, res) => {
+  console.log('LIKE')
+  Card.findOneAndUpdate(req.params.cardId,{$pull:{likes:req.user._id}},{ new: true }).then(card => res.send(card));
+});
+
+
+
+
 
 app.listen(PORT, () => {
   console.log('server started')
