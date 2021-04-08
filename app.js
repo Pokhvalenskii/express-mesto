@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
 const app = express();
 const { PORT = 3000 } = process.env;
 
@@ -8,6 +9,8 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
   useCreateIndex: true,
   useFindAndModify: false
 });
+
+app.use(express.json());
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -48,11 +51,12 @@ const cardSchema = new mongoose.Schema({
     default: []
   }],
   createdAt: {
-    default: Date.now
+    type: Date,
+    default: Date.now()
   }
 })
 
-mongoose.model('user', userSchema);
+const User = mongoose.model('user', userSchema);
 mongoose.model('card', cardSchema);
 
 
@@ -60,9 +64,16 @@ mongoose.model('card', cardSchema);
 
 app.get('/', (req, res) => {
   res.send('hello server');
+  console.log('hello console');
 });
 
-
+app.post('/users', (req, res) => {
+  console.log('add user')
+  const date = req.body;
+  // const date = {...req.body}
+  console.log(date)
+  User.create(date).then((user) => res.send(user))
+});
 
 app.listen(PORT, () => {
   console.log('server started')
