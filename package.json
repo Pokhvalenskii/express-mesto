@@ -4,7 +4,8 @@
   "description": "`/routes` — папка с файлами роутера  \r `/controllers` — папка с файлами контроллеров пользователя и карточки   \r `/models` — папка с файлами описания схем пользователя и карточки",
   "main": "index.js",
   "scripts": {
-    "lint": "npx eslint"
+    "lint": "npx eslint",
+    "start": "node app.js"
   },
   "repository": {
     "type": "git",
@@ -22,6 +23,7 @@
   },
   "dependencies": {
     "eslint-config-airbnb-base": "^14.2.1",
-    "eslint-plugin-import": "^2.22.1"
+    "eslint-plugin-import": "^2.22.1",
+    "express": "^4.17.1"
   }
 }
