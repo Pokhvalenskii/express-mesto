@@ -38,33 +38,33 @@ app.use((req, res, next) => {
 //   }
 // });
 
-const cardSchema = new mongoose.Schema({
-  name: {
-    required: true,
-    minlength: 2,
-    maxlength: 30,
-    type: String
-  },
-  link: {
-    required: true,
-    type: String
-  },
-  owner: {
-    required: true,
-    type: mongoose.Schema.Types.ObjectId
-  },
-  likes: [{
-    type: mongoose.Schema.Types.ObjectId,
-    default: []
-  }],
-  createdAt: {
-    type: Date,
-    default: Date.now()
-  }
-})
+// const cardSchema = new mongoose.Schema({
+//   name: {
+//     required: true,
+//     minlength: 2,
+//     maxlength: 30,
+//     type: String
+//   },
+//   link: {
+//     required: true,
+//     type: String
+//   },
+//   owner: {
+//     required: true,
+//     type: mongoose.Schema.Types.ObjectId
+//   },
+//   likes: [{
+//     type: mongoose.Schema.Types.ObjectId,
+//     default: []
+//   }],
+//   createdAt: {
+//     type: Date,
+//     default: Date.now()
+//   }
+// })
 
-// const User = mongoose.model('user', userSchema);
-const Card = mongoose.model('card', cardSchema);
+// // const User = mongoose.model('user', userSchema);
+// const Card = mongoose.model('card', cardSchema);
 
 ////////////////// USER /////////////////////
 // app.post('/users', (req, res) => {
@@ -106,41 +106,41 @@ app.use(router);
 ////////////////// USER /////////////////////
 ////////////////// CARDS ////////////////////
 
-app.get('/cards', (req, res) => {
-  Card.find({})
-    .then(cards => res.send(cards))
-    .catch((err) => {
-      res.status(500).send({message: 'Сервер недоступен'});
-    });
-  // console.log('getCards');
-});
+// app.get('/cards', (req, res) => {
+//   Card.find({})
+//     .then(cards => res.send(cards))
+//     .catch((err) => {
+//       res.status(500).send({message: 'Сервер недоступен'});
+//     });
+//   // console.log('getCards');
+// });
 
-app.post('/cards', (req, res) => {
-  const {name, link} = req.body;
-  console.log(name, link, req.user._id)
-  Card.create({name:name, link:link, owner:req.user._id})
-    .then(card => res.send(card))
-    .catch((err) => {
-      if(err.name === 'ValidationError'){
-        res.status(400).send({message: `${Object.values(err.errors).map((error) => error.message).join(', ')}`});
-      } else {
-        res.status(500).send({message: 'Сервер недоступен'});
-      }
-    });
-});
+// app.post('/cards', (req, res) => {
+//   const {name, link} = req.body;
+//   console.log(name, link, req.user._id)
+//   Card.create({name:name, link:link, owner:req.user._id})
+//     .then(card => res.send(card))
+//     .catch((err) => {
+//       if(err.name === 'ValidationError'){
+//         res.status(400).send({message: `${Object.values(err.errors).map((error) => error.message).join(', ')}`});
+//       } else {
+//         res.status(500).send({message: 'Сервер недоступен'});
+//       }
+//     });
+// });
 
-app.delete('/cards/:cardId', (req, res) => {
-  const { cardId } = req.params;
-  console.log('REQ:', cardId)
-  Card.findByIdAndDelete(cardId)
-    .then((card) => {
-      if(!card){
-        res.status(404).send({message: '404 — Карточка по указанному _id не найдена.'});
-      }
-      res.send(card);
-    })
-    .catch((err) => {res.status(500).send({message: 'Ошибка сервера'})})
-});
+// app.delete('/cards/:cardId', (req, res) => {
+//   const { cardId } = req.params;
+//   console.log('REQ:', cardId)
+//   Card.findByIdAndDelete(cardId)
+//     .then((card) => {
+//       if(!card){
+//         res.status(404).send({message: '404 — Карточка по указанному _id не найдена.'});
+//       }
+//       res.send(card);
+//     })
+//     .catch((err) => {res.status(500).send({message: 'Ошибка сервера'})})
+// });
 
 ////////////////// CARDS ////////////////////
 ////////////////// PATCH ////////////////////
@@ -164,27 +164,27 @@ app.delete('/cards/:cardId', (req, res) => {
 //     .catch((err)=>{res.status(404).send({message: '404 — Пользователь с указанным _id не найден.'})});
 // });
 
-app.put('/cards/:cardId/likes', (req, res) => {
-  console.log('LIKE')
-  Card.findOneAndUpdate(req.params.cardId,{$addToSet:{likes:req.user._id}},{ new: true })
-    .then(card => {if(req.params.cardId.length <= 23){
-      res.status(400).send({message: '400 — Переданы некорректные данные для постановки/снятии лайка.'})
-      }
-      res.send(card);
-  })
-    .catch((err)=>{res.status(500).send({message: 'Сервер недоступен'})});
-});
+// app.put('/cards/:cardId/likes', (req, res) => {
+//   console.log('LIKE')
+//   Card.findOneAndUpdate(req.params.cardId,{$addToSet:{likes:req.user._id}},{ new: true })
+//     .then(card => {if(req.params.cardId.length <= 23){
+//       res.status(400).send({message: '400 — Переданы некорректные данные для постановки/снятии лайка.'})
+//       }
+//       res.send(card);
+//   })
+//     .catch((err)=>{res.status(500).send({message: 'Сервер недоступен'})});
+// });
 
-app.delete('/cards/:cardId/likes', (req, res) => {
-  console.log('LIKE')
-  Card.findOneAndUpdate(req.params.cardId,{$pull:{likes:req.user._id}},{ new: true })
-  .then(card => {if(req.params.cardId.length <= 23){
-    res.status(400).send({message: '400 — Переданы некорректные данные для постановки/снятии лайка.'})
-    }
-    res.send(card);
-})
-  .catch((err)=>{res.status(500).send({message: 'Сервер недоступен'})});
-});
+// app.delete('/cards/:cardId/likes', (req, res) => {
+//   console.log('LIKE')
+//   Card.findOneAndUpdate(req.params.cardId,{$pull:{likes:req.user._id}},{ new: true })
+//   .then(card => {if(req.params.cardId.length <= 23){
+//     res.status(400).send({message: '400 — Переданы некорректные данные для постановки/снятии лайка.'})
+//     }
+//     res.send(card);
+// })
+//   .catch((err)=>{res.status(500).send({message: 'Сервер недоступен'})});
+// });
 
 
 
