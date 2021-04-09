@@ -13,7 +13,7 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
 app.use(express.json());
 app.use((req, res, next) => {
   req.user = {
-    _id: '606f61da65411b610ca5c525',
+    _id: '606f3f978343883ac461a168', //invalidID //606f406d8343883ac461a169
   };
   next();
 });

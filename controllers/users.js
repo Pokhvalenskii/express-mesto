@@ -5,7 +5,7 @@ const postUsers = (req, res) => {
   User.create(date)
     .then((user) => res.send(user))
     .catch((err) => {
-      console.log('POST ERR', err.name);
+      // console.log('POST ERR', err.name);
       if (err.name === 'ValidationError') {
         res.status(400).send({ message: `${Object.values(err.errors).map((error) => error.message).join(', ')}` });
       } else {
@@ -14,7 +14,7 @@ const postUsers = (req, res) => {
     });
 };
 
-const getUserl = (req, res) => {
+const getUser = (req, res) => {
   User.find({})
     .then((users) => res.send(users))
     .catch(() => {
@@ -26,13 +26,13 @@ const getUserById = (req, res) => {
   const { userId } = req.params;
   User.findById(userId)
     .then((user) => {
-      console.log(user);
+      // console.log(user);
       if (!user) {
         res.status(404).send({ message: '404 — Пользователь по указанному _id не найден.' });
       } res.send(user);
     })
     .catch((err) => {
-      console.log('erRRRRRr', err.name);
+      // console.log('erRRRRRr', err.name);
       if (err.name === 'CastError') {
         res.status(400).send({ message: '400 - Переданы некорректные данные при запросе' });
       } else {
@@ -42,27 +42,31 @@ const getUserById = (req, res) => {
 };
 
 const updateUser = (req, res) => {
-  // console.log('UPDATE USER')
+  // console.log('UPDATE USER', req.user._id);
   const { name, about } = req.body;
-  User.findOneAndUpdate(req.user._id, { name:name, about:about })
+  User.findByIdAndUpdate(req.user._id, { $set: { name:name, about:about } }, { new: true, runValidators: true })
     .then((user) => {
+      if (!user) { res.status(404).send({ message: '404 — Пользователь с указанным _id не найден.' }); }
       res.send(user);
     })
-    .catch(() => { res.status(404).send({ message: '404 — Пользователь с указанным _id не найден.' }); });
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        res.status(400).send({ message: '400 - Переданы некорректные данные при запросе' });
+      } else {
+        res.status(500).send({ message: 'Ошибка сервера' });
+      }
+    });
 };
 
 const updateAvatar = (req, res) => {
   // console.log('UPDATE AVATAR')
   const { avatar } = req.body;
-  User.findOneAndUpdate(req.user._id, { avatar: avatar })
+  User.findByIdAndUpdate(req.user._id, { $set: { avatar: avatar } }, { new: true, runValidators: true })
     .then((user) => {
-      console.log('AVATAR', req.user._id);
-      if (!user) {
-        res.status(400).send({ message: '400 — Переданы некорректные данные при обновлении профиля.' });
-      } res.send(user);
+      if (!user) { res.status(404).send({ message: '404 — Пользователь с указанным _id не найден.' }); }
+      res.send(user);
     })
     .catch((err) => {
-      console.log('erRRRRRr', err.name);
       if (err.name === 'CastError') {
         res.status(400).send({ message: '400 - Переданы некорректные данные при запросе' });
       } else {
@@ -72,5 +76,5 @@ const updateAvatar = (req, res) => {
 };
 
 module.exports = {
-  postUsers, getUserl, getUserById, updateUser, updateAvatar,
+  postUsers, getUser, getUserById, updateUser, updateAvatar,
 };
