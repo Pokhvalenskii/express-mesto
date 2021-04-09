@@ -2,6 +2,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 const app = express();
 const { PORT = 3000 } = process.env;
+const router = require('./routes/index')
+
 
 mongoose.connect('mongodb://localhost:27017/mestodb', {
   useNewUrlParser: true,
@@ -17,24 +19,24 @@ app.use((req, res, next) => {
   next();
 })
 
-const userSchema = new mongoose.Schema({
-  name: {
-    required: true,
-    minlength: 2,
-    maxlength: 30,
-    type: String
-  },
-  about: {
-    required: true,
-    minlength: 2,
-    maxlength: 30,
-    type: String
-  },
-  avatar: {
-    required: true,
-    type: String
-  }
-});
+// const userSchema = new mongoose.Schema({
+//   name: {
+//     required: true,
+//     minlength: 2,
+//     maxlength: 30,
+//     type: String
+//   },
+//   about: {
+//     required: true,
+//     minlength: 2,
+//     maxlength: 30,
+//     type: String
+//   },
+//   avatar: {
+//     required: true,
+//     type: String
+//   }
+// });
 
 const cardSchema = new mongoose.Schema({
   name: {
@@ -61,43 +63,45 @@ const cardSchema = new mongoose.Schema({
   }
 })
 
-const User = mongoose.model('user', userSchema);
+// const User = mongoose.model('user', userSchema);
 const Card = mongoose.model('card', cardSchema);
 
 ////////////////// USER /////////////////////
-app.post('/users', (req, res) => {
-  console.log('add user')
-  const date = req.body;
-  // console.log(date)
-  User.create(date)
-    .then((user) => res.send(user))
-    .catch((err) => {
-      if(err.name === 'ValidationError'){
-        res.status(400).send({message: `${Object.values(err.errors).map((error) => error.message).join(', ')}`});
-      } else {
-        res.status(500).send({message: 'Сервер недоступен'});
-      }
-    })
+// app.post('/users', (req, res) => {
+//   console.log('add user')
+//   const date = req.body;
+//   // console.log(date)
+//   User.create(date)
+//     .then((user) => res.send(user))
+//     .catch((err) => {
+//       if(err.name === 'ValidationError'){
+//         res.status(400).send({message: `${Object.values(err.errors).map((error) => error.message).join(', ')}`});
+//       } else {
+//         res.status(500).send({message: 'Сервер недоступен'});
+//       }
+//     })
+// });
 
-});
+app.use(router);
 
-app.get('/users', (req, res) => {
-  User.find({})
-    .then((users) => res.send(users))
-    .catch((err) => {
-      res.status(500).send({message: 'Сервер недоступен'});
-    });
-});
 
-app.get('/users/:userId', (req, res) => {
-  const {userId} = req.params;
-  User.findById(userId)
-    .then((user) => {
-      if(!user){
-        res.status(404).send({message: '404 — Пользователь по указанному _id не найден.'});
-      } res.send(user);
-    }).catch((err) => {res.status(500).send({message: 'Ошибка сервера'})})
-});
+// app.get('/users', (req, res) => {
+//   User.find({})
+//     .then((users) => res.send(users))
+//     .catch((err) => {
+//       res.status(500).send({message: 'Сервер недоступен'});
+//     });
+// });
+
+// app.get('/users/:userId', (req, res) => {
+//   const {userId} = req.params;
+//   User.findById(userId)
+//     .then((user) => {
+//       if(!user){
+//         res.status(404).send({message: '404 — Пользователь по указанному _id не найден.'});
+//       } res.send(user);
+//     }).catch((err) => {res.status(500).send({message: 'Ошибка сервера'})})
+// });
 
 ////////////////// USER /////////////////////
 ////////////////// CARDS ////////////////////
@@ -140,25 +144,25 @@ app.delete('/cards/:cardId', (req, res) => {
 
 ////////////////// CARDS ////////////////////
 ////////////////// PATCH ////////////////////
-app.patch('/users/me', (req, res) => {
-  const{name, about} = req.body;
-  User.findOneAndUpdate(req.user._id, {name: name, about:about})
-    .then(user => {
-      console.log(user.name.length)
-      if((user.name.length < 2 || user.name.length > 30) || (user.about.length < 2 || user.about.length > 30)) {
-        res.status(400).send({message: '400 — Переданы некорректные данные при обновлении профиля. '});
-      }
-      res.send(user)
-    })
-    .catch((err)=>{res.status(404).send({message: '404 — Пользователь с указанным _id не найден.'})});
-});
+// app.patch('/users/me', (req, res) => {
+//   const{name, about} = req.body;
+//   User.findOneAndUpdate(req.user._id, {name: name, about:about})
+//     .then(user => {
+//       console.log(user.name.length)
+//       if((user.name.length < 2 || user.name.length > 30) || (user.about.length < 2 || user.about.length > 30)) {
+//         res.status(400).send({message: '400 — Переданы некорректные данные при обновлении профиля. '});
+//       }
+//       res.send(user)
+//     })
+//     .catch((err)=>{res.status(404).send({message: '404 — Пользователь с указанным _id не найден.'})});
+// });
 
-app.patch('/users/me/avatar', (req, res) => {
-  const{avatar} = req.body;
-  User.findOneAndUpdate(req.user._id, {avatar: avatar})
-    .then(user => {if(!user){res.status(400).send({message: '400 — Переданы некорректные данные при обновлении профиля. '})}})
-    .catch((err)=>{res.status(404).send({message: '404 — Пользователь с указанным _id не найден.'})});
-});
+// app.patch('/users/me/avatar', (req, res) => {
+//   const{avatar} = req.body;
+//   User.findOneAndUpdate(req.user._id, {avatar: avatar})
+//     .then(user => {if(!user){res.status(400).send({message: '400 — Переданы некорректные данные при обновлении профиля. '})}})
+//     .catch((err)=>{res.status(404).send({message: '404 — Пользователь с указанным _id не найден.'})});
+// });
 
 app.put('/cards/:cardId/likes', (req, res) => {
   console.log('LIKE')
@@ -170,7 +174,6 @@ app.put('/cards/:cardId/likes', (req, res) => {
   })
     .catch((err)=>{res.status(500).send({message: 'Сервер недоступен'})});
 });
-
 
 app.delete('/cards/:cardId/likes', (req, res) => {
   console.log('LIKE')
