@@ -36,25 +36,33 @@ const deleteCardById = (req, res) => {
 };
 
 const setLike = (req, res) => {
-  Card.findOneAndUpdate(req.params.cardId, { $addToSet: { likes: req.user._id } }, { new: true })
+  Card.findByIdAndUpdate(req.params.cardId, { $addToSet: { likes: req.user._id } }, { new: true })
     .then((card) => {
-      if (req.params.cardId.length <= 23) {
-        res.status(400).send({ message: '400 — Переданы некорректные данные для постановки/снятии лайка.' });
-      }
+      if (!card) { res.status(404).send({ message: '404 — Карточка с указанным _id не найдена.' }); }
       res.send(card);
     })
-    .catch(() => { res.status(500).send({ message: 'Сервер недоступен' }); });
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        res.status(400).send({ message: '400 - Переданы некорректные данные при запросе' });
+      } else {
+        res.status(500).send({ message: 'Ошибка сервера' });
+      }
+    });
 };
 
 const removeLike = (req, res) => {
-  Card.findOneAndUpdate(req.params.cardId, { $pull: { likes: req.user._id } }, { new: true })
+  Card.findByIdAndUpdate(req.params.cardId, { $pull: { likes: req.user._id } }, { new: true })
     .then((card) => {
-      if (req.params.cardId.length <= 23) {
-        res.status(400).send({ message: '400 — Переданы некорректные данные для постановки/снятии лайка.' });
-      }
+      if (!card) { res.status(404).send({ message: '404 — Карточка с указанным _id не найдена.' }); }
       res.send(card);
     })
-    .catch(() => { res.status(500).send({ message: 'Сервер недоступен' }); });
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        res.status(400).send({ message: '400 - Переданы некорректные данные при запросе' });
+      } else {
+        res.status(500).send({ message: 'Ошибка сервера' });
+      }
+    });
 };
 
 module.exports = {
