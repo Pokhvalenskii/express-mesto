@@ -1,7 +1,7 @@
 const User = require('../models/user')
 
 const postUsers = (req, res) => {
-  console.log('add user')
+  // console.log('add user')
   const date = req.body;
   User.create(date)
     .then((user) => res.send(user))
@@ -34,11 +34,11 @@ const getUserById = (req, res) => {
 };
 
 const updateUser = (req, res) => {
-  console.log('UPDATE USER')
+  // console.log('UPDATE USER')
   const{name, about} = req.body;
   User.findOneAndUpdate(req.user._id, {name: name, about:about})
     .then(user => {
-      console.log(user.name.length)
+      // console.log(user.name.length)
       if((user.name.length < 2 || user.name.length > 30) || (user.about.length < 2 || user.about.length > 30)) {
         res.status(400).send({message: '400 — Переданы некорректные данные при обновлении профиля. '});
       }
@@ -48,7 +48,7 @@ const updateUser = (req, res) => {
 };
 
 const updateAvatar = (req, res) => {
-  console.log('UPDATE AVATAR')
+  // console.log('UPDATE AVATAR')
   const{avatar} = req.body;
   User.findOneAndUpdate(req.user._id, {avatar: avatar})
     .then(user => {

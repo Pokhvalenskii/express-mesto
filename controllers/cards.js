@@ -10,7 +10,7 @@ const getCards = (req, res) => {
 
 const postCards = (req, res) => {
   const {name, link} = req.body;
-  console.log(name, link, req.user._id)
+  // console.log(name, link, req.user._id)
   Card.create({name:name, link:link, owner:req.user._id})
     .then(card => res.send(card))
     .catch((err) => {
@@ -24,7 +24,7 @@ const postCards = (req, res) => {
 
 const deleteCardById = (req, res) => {
   const { cardId } = req.params;
-  console.log('REQ:', cardId)
+  // console.log('REQ:', cardId)
   Card.findByIdAndDelete(cardId)
     .then((card) => {
       if(!card){
@@ -36,7 +36,6 @@ const deleteCardById = (req, res) => {
 };
 
 const setLike = (req, res) => {
-  console.log('LIKE')
   Card.findOneAndUpdate(req.params.cardId,{$addToSet:{likes:req.user._id}},{ new: true })
     .then(card => {if(req.params.cardId.length <= 23){
       res.status(400).send({message: '400 — Переданы некорректные данные для постановки/снятии лайка.'})
@@ -47,7 +46,6 @@ const setLike = (req, res) => {
 };
 
 const removeLike = (req, res) => {
-  console.log('LIKE')
   Card.findOneAndUpdate(req.params.cardId,{$pull:{likes:req.user._id}},{ new: true })
   .then(card => {if(req.params.cardId.length <= 23){
     res.status(400).send({message: '400 — Переданы некорректные данные для постановки/снятии лайка.'})
