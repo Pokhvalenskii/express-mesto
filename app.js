@@ -20,6 +20,4 @@ app.use((req, res, next) => {
 
 app.use(router);
 
-app.listen(PORT, () => {
-  console.log('server started');
-});
+app.listen(PORT, () => {});

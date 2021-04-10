@@ -50,7 +50,7 @@ const updateUser = (req, res) => {
       res.send(user);
     })
     .catch((err) => {
-      if (err.name === 'CastError') {
+      if (err.name === 'CastError' || err.name === 'ValidationError') {
         res.status(400).send({ message: '400 - Переданы некорректные данные при запросе' });
       } else {
         res.status(500).send({ message: 'Ошибка сервера' });
@@ -67,7 +67,7 @@ const updateAvatar = (req, res) => {
       res.send(user);
     })
     .catch((err) => {
-      if (err.name === 'CastError') {
+      if (err.name === 'CastError' || err.name === 'ValidationError') {
         res.status(400).send({ message: '400 - Переданы некорректные данные при запросе' });
       } else {
         res.status(500).send({ message: 'Ошибка сервера' });
