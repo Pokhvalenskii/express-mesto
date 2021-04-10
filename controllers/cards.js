@@ -10,7 +10,6 @@ const getCards = (req, res) => {
 
 const postCards = (req, res) => {
   const { name, link } = req.body;
-  // console.log(name, link, req.user._id)
   Card.create({ name, link, owner: req.user._id })
     .then((card) => res.send(card))
     .catch((err) => {
@@ -24,15 +23,19 @@ const postCards = (req, res) => {
 
 const deleteCardById = (req, res) => {
   const { cardId } = req.params;
-  // console.log('REQ:', cardId)
   Card.findByIdAndDelete(cardId)
     .then((card) => {
       if (!card) {
         res.status(404).send({ message: '404 — Карточка по указанному _id не найдена.' });
-      }
-      res.send(card);
+      } else { res.send(card); }
     })
-    .catch(() => { res.status(500).send({ message: 'Ошибка сервера' }); });
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        res.status(400).send({ message: '400 - Переданы некорректные данные при запросе' });
+      } else {
+        res.status(500).send({ message: 'Ошибка сервера' });
+      }
+    });
 };
 
 const setLike = (req, res) => {

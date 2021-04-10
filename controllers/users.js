@@ -42,9 +42,9 @@ const getUserById = (req, res) => {
 };
 
 const updateUser = (req, res) => {
-  // console.log('UPDATE USER', req.user._id);
-  const { name, about } = req.body;
-  User.findByIdAndUpdate(req.user._id, { $set: { name:name, about:about } }, { new: true, runValidators: true })
+  User.findByIdAndUpdate(req.user._id,
+    { $set: { name: req.body.name, about: req.body.about } },
+    { new: true, runValidators: true })
     .then((user) => {
       if (!user) { res.status(404).send({ message: '404 — Пользователь с указанным _id не найден.' }); }
       res.send(user);
@@ -59,9 +59,9 @@ const updateUser = (req, res) => {
 };
 
 const updateAvatar = (req, res) => {
-  // console.log('UPDATE AVATAR')
-  const { avatar } = req.body;
-  User.findByIdAndUpdate(req.user._id, { $set: { avatar: avatar } }, { new: true, runValidators: true })
+  User.findByIdAndUpdate(req.user._id,
+    { $set: { avatar: req.body.avatar } },
+    { new: true, runValidators: true })
     .then((user) => {
       if (!user) { res.status(404).send({ message: '404 — Пользователь с указанным _id не найден.' }); }
       res.send(user);
