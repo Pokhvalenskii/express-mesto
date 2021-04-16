@@ -2,19 +2,27 @@ const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
   name: {
-    required: true,
     minlength: 2,
     maxlength: 30,
     type: String,
+    default: 'Жак-ив-кусто',
+  },
+  email: {
+    required: true,
+    type: String,
+  },
+  password: {
+    required: true,
+    type: String,
   },
   about: {
-    required: true,
+    default: 'Исследователь',
     minlength: 2,
     maxlength: 30,
     type: String,
   },
   avatar: {
-    required: true,
+    default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
     type: String,
   },
 });

@@ -1,15 +1,40 @@
+const bcrypt = require('bcrypt');
 const User = require('../models/user');
 
-const postUsers = (req, res) => {
-  const date = req.body;
-  User.create(date)
-    .then((user) => res.send(user))
-    .catch((err) => {
-      // console.log('POST ERR', err.name);
-      if (err.name === 'ValidationError') {
-        res.status(400).send({ message: `${Object.values(err.errors).map((error) => error.message).join(', ')}` });
+const createUsers = (req, res) => {
+  const {
+    name,
+    email,
+    about,
+    avatar,
+    password,
+  } = req.body;
+
+  // console.log('date', name, email, about, avatar, password);
+
+  User.findOne({ email })
+    .then((user) => {
+      if (user) {
+        res.status(400).send({ message: 'Пользователь с таким Email уже существует' });
       } else {
-        res.status(500).send({ message: 'Сервер недоступен' });
+        bcrypt.hash(password, 10)
+          .then((hash) => {
+            User.create({
+              name,
+              email,
+              about,
+              avatar,
+              password: hash,
+            })
+              .then((date) => res.status(201).send(date))
+              .catch((err) => {
+                if (err.name === 'ValidationError') {
+                  res.status(400).send({ message: `${Object.values(err.errors).map((error) => error.message).join(', ')}` });
+                } else {
+                  res.status(500).send({ message: 'Сервер недоступен' });
+                }
+              });
+          });
       }
     });
 };
@@ -76,5 +101,5 @@ const updateAvatar = (req, res) => {
 };
 
 module.exports = {
-  postUsers, getUser, getUserById, updateUser, updateAvatar,
+  createUsers, getUser, getUserById, updateUser, updateAvatar,
 };
