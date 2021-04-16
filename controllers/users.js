@@ -1,6 +1,11 @@
 const bcrypt = require('bcrypt');
 const User = require('../models/user');
 
+const signInUser = (req, res) => {
+   const { email, password } = req.body;
+   User.findOne()
+}
+
 const createUsers = (req, res) => {
   const {
     name,
@@ -10,8 +15,9 @@ const createUsers = (req, res) => {
     password,
   } = req.body;
 
-  // console.log('date', name, email, about, avatar, password);
-
+  if (!email || !password) {
+    res.status(400).send({ message: 'Email и пароль не могут быть пустыми' });
+  }
   User.findOne({ email })
     .then((user) => {
       if (user) {
