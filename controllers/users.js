@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const user = require('../models/user');
 require('dotenv').config();
 const User = require('../models/user');
 
@@ -102,7 +103,7 @@ const getUserById = (req, res) => {
 };
 
 const updateUser = (req, res) => {
-  User.findByIdAndUpdate(req.user._id,
+  User.findByIdAndUpdate(req.user.id,
     { $set: { name: req.body.name, about: req.body.about } },
     { new: true, runValidators: true })
     .then((user) => {
@@ -119,7 +120,7 @@ const updateUser = (req, res) => {
 };
 
 const updateAvatar = (req, res) => {
-  User.findByIdAndUpdate(req.user._id,
+  User.findByIdAndUpdate(req.user.id,
     { $set: { avatar: req.body.avatar } },
     { new: true, runValidators: true })
     .then((user) => {
@@ -135,6 +136,11 @@ const updateAvatar = (req, res) => {
     });
 };
 
+const getMe = (req, res) => {
+  User.findById(req.user.id)
+    .then((user) => { res.status(201).send(user); });
+};
+
 module.exports = {
   createUsers,
   getUser,
@@ -142,4 +148,5 @@ module.exports = {
   updateUser,
   updateAvatar,
   signInUser,
+  getMe,
 };

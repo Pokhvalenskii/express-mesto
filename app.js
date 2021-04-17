@@ -11,13 +11,5 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
   useFindAndModify: false,
 });
 app.use(express.json());
-app.use((req, res, next) => {
-  req.user = {
-    _id: '606f3f978343883ac461a168',
-  };
-  next();
-});
-
 app.use(router);
-
 app.listen(PORT, () => {});
