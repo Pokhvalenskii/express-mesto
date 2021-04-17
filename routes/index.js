@@ -5,11 +5,11 @@ const login = require('./login');
 const createUser = require('./createUsers');
 const auth = require('../middlewares/auth');
 
-router.use('/cards', cardRouter);
 router.use('/signin', login);
 router.use('/signup', createUser);
 
 router.use(auth);
+router.use('/cards', cardRouter);
 router.use('/users', userRouter);
 
 module.exports = router;

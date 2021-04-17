@@ -15,7 +15,6 @@ function postmanCookie(req) {
 }
 
 const auth = (req, res, next) => {
-  console.log('REQ ', postmanCookie(req));
   const token = postmanCookie(req);
   if (!token) {
     next(res.status(401).send({ message: 'Неверный логин или пароль' }));
