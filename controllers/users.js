@@ -48,7 +48,7 @@ const createUsers = (req, res) => {
   if (!email || !password) {
     res.status(400).send({ message: 'Email и пароль не могут быть пустыми' });
   }
-  User.findOne({ email })
+  User.findOne({ email }).select('+password')
     .then((user) => {
       if (user) {
         res.status(400).send({ message: 'Пользователь с таким Email уже существует' });

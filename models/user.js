@@ -14,6 +14,7 @@ const userSchema = new mongoose.Schema({
   password: {
     required: true,
     type: String,
+    select: false,
   },
   about: {
     default: 'Исследователь',
