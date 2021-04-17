@@ -1,10 +1,39 @@
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+require('dotenv').config();
 const User = require('../models/user');
 
+const { JWT_TOKEN } = process.env;
+
 const signInUser = (req, res) => {
-   const { email, password } = req.body;
-   User.findOne()
-}
+  const { email, password } = req.body;
+  console.log('sadfsdfasdf', req.body);
+  User.findOne({ email })
+    .then((user) => {
+      if (!user) {
+        res.status(401).send({ message: 'email или пароль неправильный' });
+      } else {
+        bcrypt.compare(password, user.password, ((err, isValid) => {
+          console.log('err: ', err, ' isValid: ', isValid);
+          if (err) {
+            res.status(403).send({ error: err });
+          }
+          if (isValid) {
+            const token = jwt.sign({
+              id: user._id,
+            }, JWT_TOKEN);
+            res.cookie('jwt', token, {
+              httpOnly: true,
+              sameSite: true,
+              maxAge: 3600000 * 24 * 7,
+            }).status(201).send({ message: 'Login', token });
+          } else {
+            res.status(401).send({ message: 'email или пароль неправильный' });
+          }
+        }));
+      }
+    });
+};
 
 const createUsers = (req, res) => {
   const {
@@ -107,5 +136,10 @@ const updateAvatar = (req, res) => {
 };
 
 module.exports = {
-  createUsers, getUser, getUserById, updateUser, updateAvatar,
+  createUsers,
+  getUser,
+  getUserById,
+  updateUser,
+  updateAvatar,
+  signInUser,
 };
