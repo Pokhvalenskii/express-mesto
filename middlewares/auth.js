@@ -3,6 +3,7 @@ require('dotenv').config();
 
 const { JWT_TOKEN } = process.env;
 
+// функция для работы с печеньками от постмана
 function postmanCookie(req) {
   const cookie = req.headers.cookie;
   if (cookie) {
