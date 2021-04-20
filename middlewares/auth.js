@@ -1,4 +1,6 @@
 const jwt = require('jsonwebtoken');
+const UnauthorizedError = require('../errors/unauthorized-err');
+
 require('dotenv').config();
 
 const { JWT_TOKEN } = process.env;
@@ -18,13 +20,13 @@ function postmanCookie(req) {
 const auth = (req, res, next) => {
   const token = postmanCookie(req);
   if (!token) {
-    next(res.status(401).send({ message: 'Неверный логин или пароль' }));
+    next(new UnauthorizedError());
   } else {
     let payload;
     try {
       payload = jwt.verify(token.jwt, JWT_TOKEN);
     } catch (err) {
-      next(res.status(401).send({ message: 'Неверный логин или пароль' }));
+      next(new UnauthorizedError());
     }
 
     req.user = payload;

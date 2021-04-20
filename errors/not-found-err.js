@@ -1,6 +1,6 @@
 class NotFoundError extends Error {
   constructor() {
-    super('Пользователь по указанному id не найден');
+    super('404 - Не найдено');
     this.statusCode = 404;
   }
 }

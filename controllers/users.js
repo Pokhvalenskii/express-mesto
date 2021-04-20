@@ -6,6 +6,7 @@ const NotFoundError = require('../errors/not-found-err');
 const UnauthorizedError = require('../errors/unauthorized-err');
 const ServerError = require('../errors/server-error');
 const ConflictError = require('../errors/conflict-err');
+const BadRequestError = require('../errors/bad-request-err');
 
 const { JWT_TOKEN } = process.env;
 
@@ -30,7 +31,7 @@ const signInUser = (req, res, next) => {
               maxAge: 3600000 * 24 * 7,
             }).status(201).send({ message: 'Login', token });
           } else {
-            throw new UnauthorizedError();
+            next(new UnauthorizedError());
           }
         }));
       }
@@ -45,9 +46,8 @@ const createUsers = (req, res, next) => {
     avatar,
     password,
   } = req.body;
-
   if (!email || !password) {
-    res.status(400).send({ message: 'Email и пароль не могут быть пустыми' });
+    throw new BadRequestError();
   }
   User.findOne({ email })
     .then((user) => {
