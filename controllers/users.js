@@ -8,18 +8,19 @@ const ServerError = require('../errors/server-error');
 const ConflictError = require('../errors/conflict-err');
 const BadRequestError = require('../errors/bad-request-err');
 
-const { JWT_TOKEN } = process.env;
+const { JWT_TOKEN = 'dev-key' } = process.env;
 
 const signInUser = (req, res, next) => {
   const { email, password } = req.body;
-  User.findOne({ email })
+  User.findOne({ email }).select('+password')
     .then((user) => {
       if (!user) {
         throw new UnauthorizedError();
       } else {
+        // console.log('flag 0', password, ' _ ', user.password, user);
         bcrypt.compare(password, user.password, ((err, isValid) => {
           if (err) {
-            throw new ServerError();
+            next(new ServerError());
           }
           if (isValid) {
             const token = jwt.sign({
