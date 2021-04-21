@@ -16,6 +16,7 @@ const postCards = (req, res, next) => {
   Card.create({ name, link, owner: req.user.id })
     .then((card) => res.send(card))
     .catch(() => {
+      // console.log('flag create card ');
       next(new ServerError());
     });
 };

@@ -112,9 +112,13 @@ const updateAvatar = (req, res, next) => {
 };
 
 const getMe = (req, res, next) => {
+  console.log('flag getMe')
   User.findById(req.user.id)
     .then((user) => { res.status(201).send(user); })
-    .catch(() => { next(new ServerError()); });
+    .catch(() => {
+      console.log('flag get me');
+      next(new ServerError());
+    });
 };
 
 module.exports = {
