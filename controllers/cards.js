@@ -16,7 +16,6 @@ const postCards = (req, res, next) => {
   Card.create({ name, link, owner: req.user.id })
     .then((card) => res.send(card))
     .catch(() => {
-      // console.log('flag create card ');
       next(new ServerError());
     });
 };
@@ -26,7 +25,7 @@ const deleteCardById = (req, res, next) => {
   Card.findById(cardId)
     .then((card) => {
       if (card) {
-        if (card.owner == req.user.id) {
+        if (JSON.stringify(card.owner) === JSON.stringify(req.user.id)) {
           Card.findByIdAndDelete(cardId).then(() => res.status(201).send({ message: 'карточка удалена' }));
         } else {
           throw new Forbidden();
