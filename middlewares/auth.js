@@ -7,7 +7,7 @@ const { JWT_TOKEN } = process.env;
 
 // функция для работы с печеньками от постмана
 function postmanCookie(req) {
-  const cookie = req.headers.cookie;
+  const { cookie } = req.headers;
   if (cookie) {
     const values = cookie.split(';').reduce((res, item) => {
       const data = item.trim().split('=');
