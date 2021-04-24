@@ -64,7 +64,23 @@ const createUsers = (req, res, next) => {
               avatar,
               password: hash,
             })
-              .then((date) => res.status(201).send(date));
+              .then((date) => {
+                const {
+                  name,
+                  email,
+                  about,
+                  avatar,
+                  _id,
+                } = date;
+                res.status(201)
+                  .send({
+                    name,
+                    email,
+                    about,
+                    avatar,
+                    _id,
+                  });
+              });
           });
       }
     }).catch(next);
