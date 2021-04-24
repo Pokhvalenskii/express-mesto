@@ -10,6 +10,4 @@ router.post('/', celebrate({
   }),
 }), createUsers);
 
-router.post('/', createUsers);
-
 module.exports = router;

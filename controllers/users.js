@@ -17,7 +17,6 @@ const signInUser = (req, res, next) => {
       if (!user) {
         throw new UnauthorizedError();
       } else {
-        // console.log('flag 0', password, ' _ ', user.password, user);
         bcrypt.compare(password, user.password, ((err, isValid) => {
           if (err) {
             next(new ServerError());
@@ -129,10 +128,10 @@ const updateAvatar = (req, res, next) => {
 
 const getMe = (req, res, next) => {
   User.findById(req.user.id)
-    .then((user) => { res.status(201).send(user); })
-    .catch(() => {
-      next(new ServerError());
-    });
+    .then((user) => {
+      res.status(201).send(user);
+    })
+    .catch(next);
 };
 
 module.exports = {

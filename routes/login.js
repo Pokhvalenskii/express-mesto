@@ -10,6 +10,4 @@ router.post('/', celebrate({
   }),
 }), signInUser);
 
-router.post('/', signInUser);
-
 module.exports = router;

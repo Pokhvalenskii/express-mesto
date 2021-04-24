@@ -12,6 +12,6 @@
       "no-var":"error",
       "no-underscore-dangle": ["error", { "allow": ["_id"] }],
       "linebreak-style": 0,
-      "no-shadow": "off",
+      "no-shadow": "off"
     }
 }

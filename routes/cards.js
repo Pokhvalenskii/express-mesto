@@ -16,26 +16,22 @@ router.post('/', celebrate({
 
 router.delete('/:cardId/likes', celebrate({
   params: Joi.object().keys({
-    cardId: Joi.string().hex().required().max(24),
+    cardId: Joi.string().hex().required().length(24),
   }),
 }), removeLike);
 
 router.put('/:cardId/likes', celebrate({
   params: Joi.object().keys({
-    cardId: Joi.string().hex().required().max(24),
+    cardId: Joi.string().hex().required().length(24),
   }),
 }), setLike);
 
 router.delete('/:cardId', celebrate({
   params: Joi.object().keys({
-    cardId: Joi.string().hex().required().max(24),
+    cardId: Joi.string().hex().required().length(24),
   }),
 }), deleteCardById);
 
 router.get('/', getCards);
-router.post('/', postCards);
-router.delete('/:cardId/likes', removeLike);
-router.delete('/:cardId', deleteCardById);
-router.put('/:cardId/likes', setLike);
 
 module.exports = router;
