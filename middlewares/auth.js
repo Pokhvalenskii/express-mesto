@@ -18,7 +18,8 @@ function postmanCookie(req) {
 }
 
 const auth = (req, res, next) => {
-  const token = postmanCookie(req);
+  //const token = postmanCookie(req);
+  const token = req.cookie.jwt;
   if (!token) {
     next(new UnauthorizedError());
   } else {
