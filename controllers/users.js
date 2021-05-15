@@ -25,11 +25,12 @@ const signInUser = (req, res, next) => {
             const token = jwt.sign({
               id: user._id,
             }, JWT_TOKEN);
-            res.cookie('jwt', token, {
-              httpOnly: true,
-              sameSite: true,
-              maxAge: 3600000 * 24 * 7,
-            }).status(201).send({ message: 'Login', token });
+            res.status(201).send({ message: 'Login', token });
+            // cookie('jwt', token, {
+            //   httpOnly: true,
+            //   // sameSite: true,
+            //   maxAge: 3600000 * 24 * 7,
+            // }).
           } else {
             next(new UnauthorizedError());
           }
